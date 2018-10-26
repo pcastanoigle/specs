@@ -120,13 +120,13 @@ public class PlanSpec {
         BambooServer bambooServer = new BambooServer("http://localhost:8085");
         final PlanSpec planSpec = new PlanSpec();
         
-        // BUILD PLAN
+      /*  // BUILD PLAN
         final Plan buildPlan = planSpec.createBuildPlan();
         bambooServer.publish(buildPlan);
 
         PlanPermissions planPermission = planSpec.createBuildPlanPermission(buildPlan.getIdentifier());
         bambooServer.publish(planPermission);
-        
+        */
         // DEPLOYMENT PLAN
         
         final Deployment deployment = planSpec.createDeploymentProject();
