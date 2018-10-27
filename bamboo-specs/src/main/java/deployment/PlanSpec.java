@@ -25,10 +25,10 @@ import com.atlassian.bamboo.specs.util.BambooServer;
 public class PlanSpec {
 	
 	private final static String PROJECT_NAME = "DEMO";
-	private final static String PROJECT_KEY = "BFD";
+	private final static String PROJECT_KEY = "DEMO";
 	private final static String DEPLOYMENT_KEY = "DEMO";
 	private final static String BUILD_PLAN_NAME = "DEMO";
-	private final static String BUILD_PLAN_KEY = "BFD";
+	private final static String BUILD_PLAN_KEY = "DEMO";
 	
 	public final Project createBuildProject() {
         return new Project()
