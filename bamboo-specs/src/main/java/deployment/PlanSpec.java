@@ -69,7 +69,7 @@ public class PlanSpec {
                 .tasks(new CleanWorkingDirectoryTask(),
                     new ScriptTask()
                         .description("download deployment artifacts")
-                        .inlineBody("mkdir \"deployment_scripts\"")),
+                        .inlineBody("mkdir \"deployment_scripts\""),
 						new ScriptTask()
                         .description("download deployment artifacts")
                         .inlineBody("echo \"download artifacts\"")
