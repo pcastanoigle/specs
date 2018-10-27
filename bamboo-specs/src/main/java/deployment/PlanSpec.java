@@ -69,8 +69,11 @@ public class PlanSpec {
                 .tasks(new CleanWorkingDirectoryTask(),
                     new ScriptTask()
                         .description("download deployment artifacts")
+                        .inlineBody("mkdir \"deployment_scripts\"")),
+						new ScriptTask()
+                        .description("download deployment artifacts")
                         .inlineBody("echo \"download artifacts\"")
-                        .workingSubdirectory("deployment_scripts")),
+                        .workingSubdirectory("deployment_scripts")),),
             new Environment("PROD")
                 .description("Production deployment")
                 .tasks(new CleanWorkingDirectoryTask(),
