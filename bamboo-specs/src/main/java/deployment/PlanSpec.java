@@ -86,17 +86,17 @@ public class PlanSpec {
 	
 	PlanPermissions createBuildPlanPermission(PlanIdentifier planIdentifier) {
         Permissions permission = new Permissions()
-        		.groupPermissions(DXC_ADMINISTRATORS, PermissionType.ADMIN, PermissionType.CLONE, PermissionType.EDIT, PermissionType.BUILD, PermissionType.CREATE, PermissionType.DELETE, PermissionType.VIEW)
-                .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.CLONE, PermissionType.EDIT, PermissionType.BUILD, PermissionType.CREATE, PermissionType.DELETE, PermissionType.VIEW)
-                .groupPermissions(PROJECT_TEAM, PermissionType.BUILD, PermissionType.VIEW);
+        		.groupPermissions(DXC_ADMINISTRATORS, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD, PermissionType.CLONE, PermissionType.ADMIN) 
+                .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
+                .groupPermissions(PROJECT_TEAM, PermissionType.VIEW, PermissionType.BUILD);
         return new PlanPermissions(planIdentifier.getProjectKey(), planIdentifier.getPlanKey()).permissions(permission);
     }
 	
 	public DeploymentPermissions deploymentPermission() {
         final DeploymentPermissions deploymentPermission = new DeploymentPermissions(PROJECT_NAME)
             .permissions(new Permissions()
-			        .groupPermissions(DXC_ADMINISTRATORS, PermissionType.ADMIN, PermissionType.CLONE, PermissionType.EDIT, PermissionType.BUILD, PermissionType.CREATE, PermissionType.DELETE, PermissionType.VIEW)
-			        .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.CLONE, PermissionType.EDIT, PermissionType.BUILD, PermissionType.CREATE, PermissionType.DELETE, PermissionType.VIEW)
+			        .groupPermissions(DXC_ADMINISTRATORS,PermissionType.VIEW, PermissionType.EDIT, PermissionType.ADMIN)
+			        .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.VIEW, PermissionType.EDIT)
 			        .groupPermissions(PROJECT_TEAM, PermissionType.VIEW));
         
         return deploymentPermission;
@@ -106,8 +106,8 @@ public class PlanSpec {
         final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(PROJECT_NAME)
             .environmentName("UAT")
             .permissions(new Permissions()
-                    .groupPermissions(DXC_ADMINISTRATORS, PermissionType.ADMIN, PermissionType.EDIT, PermissionType.VIEW, PermissionType.BUILD)
-                    .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.EDIT, PermissionType.VIEW, PermissionType.BUILD)
+                    .groupPermissions(DXC_ADMINISTRATORS, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD, PermissionType.ADMIN)
+                    .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
                     .groupPermissions(PROJECT_TEAM, PermissionType.VIEW, PermissionType.BUILD));
         return environmentPermission;
     }
@@ -116,8 +116,8 @@ public class PlanSpec {
         final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(PROJECT_NAME)
             .environmentName("PROD")
             .permissions(new Permissions()
-                    .groupPermissions(DXC_ADMINISTRATORS, PermissionType.ADMIN, PermissionType.EDIT, PermissionType.VIEW, PermissionType.BUILD)
-                    .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.EDIT, PermissionType.VIEW, PermissionType.BUILD)
+            		.groupPermissions(DXC_ADMINISTRATORS, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD, PermissionType.ADMIN)
+                    .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
                     .groupPermissions(PROJECT_TEAM, PermissionType.VIEW));
         return environmentPermission;
     }
