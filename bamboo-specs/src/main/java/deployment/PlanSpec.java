@@ -104,7 +104,7 @@ public class PlanSpec {
     }
 	
 	public DeploymentPermissions deploymentPermission() {
-        final DeploymentPermissions deploymentPermission = new DeploymentPermissions(DEPLOYMENT_PROJECT_NAME)
+        final DeploymentPermissions deploymentPermission = new DeploymentPermissions(DEPLOYMENT_KEY)
             .permissions(new Permissions()
 			        .groupPermissions(DXC_ADMINISTRATORS,PermissionType.VIEW, PermissionType.EDIT)
 			        .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.VIEW, PermissionType.EDIT)
@@ -114,7 +114,7 @@ public class PlanSpec {
     }
     
     public EnvironmentPermissions environmentPermissionUAT() {
-        final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(DEPLOYMENT_PROJECT_NAME)
+        final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(DEPLOYMENT_KEY)
             .environmentName(UAT_ENV)
             .permissions(new Permissions()
                     .groupPermissions(DXC_ADMINISTRATORS, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
@@ -124,7 +124,7 @@ public class PlanSpec {
     }
     
     public EnvironmentPermissions environmentPermissionPROD() {
-        final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(DEPLOYMENT_PROJECT_NAME)
+        final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(DEPLOYMENT_KEY)
             .environmentName(PROD_ENV)
             .permissions(new Permissions()
             		.groupPermissions(DXC_ADMINISTRATORS, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
