@@ -45,6 +45,13 @@ public class PlanSpec {
 	// Bamboo URL
 	private final static String BAMBOO_URL = "http://localhost:8085";
 	
+	
+	// UAT environment name
+	private final static String UAT_ENV = "UAT";
+	// PROD environment name
+	private final static String PROD_ENV = "PROD";
+	
+	
 	// *** CERTIFIED REPOSITORY DETAILS *** //	
 	// Repo name
 	private final static String REPO_NAME = "Verified repo";
@@ -60,6 +67,8 @@ public class PlanSpec {
 	private final static String DXC_CONTINUOUS_DEPLOYMENT_TEAM = "CEGSEC_DEVOPS_GE_CD_DEVELOPERS";
 	// Project team
 	private final static String PROJECT_TEAM = "CEGSEC_DEVOPS_GE_CD_USERS";
+	
+	
 	
 	
 	
@@ -104,7 +113,7 @@ public class PlanSpec {
     
     public EnvironmentPermissions environmentPermissionUAT() {
         final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(PROJECT_NAME)
-            .environmentName("UAT")
+            .environmentName(UAT_ENV)
             .permissions(new Permissions()
                     .groupPermissions(DXC_ADMINISTRATORS, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
                     .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
@@ -114,7 +123,7 @@ public class PlanSpec {
     
     public EnvironmentPermissions environmentPermissionPROD() {
         final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(PROJECT_NAME)
-            .environmentName("PROD")
+            .environmentName(PROD_ENV)
             .permissions(new Permissions()
             		.groupPermissions(DXC_ADMINISTRATORS, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
                     .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
@@ -170,7 +179,7 @@ public class PlanSpec {
 		//*** MODIFY THIS ***//
 		/* TODO: Modify tasks for UAT and PROD environments */
 		deployment.environments(
-			new Environment("UAT")
+			new Environment(UAT_ENV)
                 .description("UAT environment")
                 .tasks(new CleanWorkingDirectoryTask(),
                     new ScriptTask()
@@ -180,7 +189,7 @@ public class PlanSpec {
                         .description("download deployment artifacts")
                         .inlineBody("echo \"download artifacts\"")
                         .workingSubdirectory("deployment_scripts")),
-            new Environment("PROD")
+            new Environment(PROD_ENV)
                 .description("Production deployment")
                 .tasks(new CleanWorkingDirectoryTask(),
                     new ScriptTask()
