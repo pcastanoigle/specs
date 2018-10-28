@@ -27,13 +27,11 @@ public class PlanSpec {
 	
 	// *** PLAN DETAILS *** //
 	// Name of the project
-	private final static String BUILD_PROJECT_NAME = "BUILDPROJECTNAME";
+	private final static String PROJECT_NAME = "PROJECTNAME";
 	// Project key
 	private final static String PROJECT_KEY = "PROJECTKEY";
 	// Deployment project key
 	private final static String DEPLOYMENT_KEY = "DEPLOYKEY";
-	// Name of the project
-	private final static String DEPLOYMENT_PROJECT_NAME = "PROJECTNAME";	
 	// Deployment project description
 	private final static String DEPLOYMENT_PLAN_DESC = "Description of the deployment plan";
 	// Release name format
@@ -78,7 +76,7 @@ public class PlanSpec {
 	/*** STANDARD METHODS - NOT MODIFY ***/	
 	public final Project createBuildProject() {
         return new Project()
-                .name(BUILD_PROJECT_NAME)
+                .name(PROJECT_NAME)
                 .key(PROJECT_KEY);
 	}
 	
