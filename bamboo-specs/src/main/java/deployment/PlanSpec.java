@@ -24,12 +24,47 @@ import com.atlassian.bamboo.specs.util.BambooServer;
 @BambooSpec
 public class PlanSpec {
 	
-	private final static String PROJECT_NAME = "DEMO";
-	private final static String PROJECT_KEY = "DEMO";
-	private final static String DEPLOYMENT_KEY = "DEMO";
-	private final static String BUILD_PLAN_NAME = "DEMO";
-	private final static String BUILD_PLAN_KEY = "DEMO";
 	
+	// *** PLAN DETAILS *** //
+	// Name of the project
+	private final static String PROJECT_NAME = "PROJECTNAME";
+	// Project key
+	private final static String PROJECT_KEY = "PROJECTKEY";
+	// Deployment project key
+	private final static String DEPLOYMENT_KEY = "DEPLOYKEY";
+	// Deployment project description
+	private final static String DEPLOYMENT_PLAN_DESC = "Description of the deployment plan";
+	// Release name format
+	private final static String RELEASE_NAME_FORMAT = "Release-1";
+	// Name of the build plan
+	private final static String BUILD_PLAN_NAME = "BUILDPLANNAME";
+	// Build plan key
+	private final static String BUILD_PLAN_KEY = "BUILDPLANKEY";
+	// Build plan description
+	private final static String BUILD_PLAN_DESC = "Description of the build plan";
+	// Bamboo URL
+	private final static String BAMBOO_URL = "http://localhost:8085";
+	
+	// *** CERTIFIED REPOSITORY DETAILS *** //	
+	// Repo name
+	private final static String REPO_NAME = "Verified repo";
+	// Repo URL
+	private final static String REPO_URL = "ssh://git@http://ceala03374.emea.zurich.corp:7990:DEMO/deployment_scripts.git";
+	// Repo branch
+	private final static String REPO_BRANCH = "verified";
+	
+	// *** GROUPS AND USERS FOR PRIVILEGES *** //
+	// DXC platform administrators
+	private final static String DXC_ADMINISTRATORS = "CEGSEC_DEVOPS_GE_DEVOPS_ADMINISTRATORS";
+	// DXC reviewers and teams
+	private final static String DXC_CONTINUOUS_DEPLOYMENT_TEAM = "CEGSEC_DEVOPS_GE_CD_DEVELOPERS";
+	// Project team
+	private final static String PROJECT_TEAM = "CEGSEC_DEVOPS_GE_CD_USERS";
+	
+	
+	
+	
+	/*** STANDARD METHODS - NOT MODIFY ***/	
 	public final Project createBuildProject() {
         return new Project()
                 .name(PROJECT_NAME)
@@ -39,30 +74,100 @@ public class PlanSpec {
 	public final Plan createBuildPlan()
 	{
 		Plan plan = new Plan(createBuildProject(), BUILD_PLAN_NAME, BUILD_PLAN_KEY);
-		plan.description("Demo Build plan");
+		plan.description(BUILD_PLAN_DESC);
 		plan.enabled(true);
 		plan.planRepositories(new GitRepository()
-                .name("verified repo")
-                .url("ssh://git@http://ceala03374.emea.zurich.corp:7990:DEMO/deployment_scripts.git")
-                .branch("verified"));
+                .name(REPO_NAME)
+                .url(REPO_URL)
+                .branch(REPO_BRANCH));
 		
 		return plan;
 	}
 	
 	PlanPermissions createBuildPlanPermission(PlanIdentifier planIdentifier) {
         Permissions permission = new Permissions()
-                .userPermissions("PCASTANOIGLE", PermissionType.ADMIN, PermissionType.CLONE, PermissionType.EDIT)
-                .anonymousUserPermissionView();
+        		.groupPermissions(DXC_ADMINISTRATORS, PermissionType.ADMIN, PermissionType.CLONE, PermissionType.EDIT, PermissionType.BUILD, PermissionType.CREATE, PermissionType.DELETE, PermissionType.VIEW)
+                .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.CLONE, PermissionType.EDIT, PermissionType.BUILD, PermissionType.CREATE, PermissionType.DELETE, PermissionType.VIEW)
+                .groupPermissions(PROJECT_TEAM, PermissionType.BUILD, PermissionType.VIEW);
         return new PlanPermissions(planIdentifier.getProjectKey(), planIdentifier.getPlanKey()).permissions(permission);
     }
 	
-	public final Deployment createDeploymentProject()
+	public DeploymentPermissions deploymentPermission() {
+        final DeploymentPermissions deploymentPermission = new DeploymentPermissions(PROJECT_NAME)
+            .permissions(new Permissions()
+			        .groupPermissions(DXC_ADMINISTRATORS, PermissionType.ADMIN, PermissionType.CLONE, PermissionType.EDIT, PermissionType.BUILD, PermissionType.CREATE, PermissionType.DELETE, PermissionType.VIEW)
+			        .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.CLONE, PermissionType.EDIT, PermissionType.BUILD, PermissionType.CREATE, PermissionType.DELETE, PermissionType.VIEW)
+			        .groupPermissions(PROJECT_TEAM, PermissionType.VIEW));
+        
+        return deploymentPermission;
+    }
+    
+    public EnvironmentPermissions environmentPermissionUAT() {
+        final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(PROJECT_NAME)
+            .environmentName("UAT")
+            .permissions(new Permissions()
+                    .groupPermissions(DXC_ADMINISTRATORS, PermissionType.ADMIN, PermissionType.EDIT, PermissionType.VIEW, PermissionType.BUILD)
+                    .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.EDIT, PermissionType.VIEW, PermissionType.BUILD)
+                    .groupPermissions(PROJECT_TEAM, PermissionType.VIEW, PermissionType.BUILD));
+        return environmentPermission;
+    }
+    
+    public EnvironmentPermissions environmentPermissionPROD() {
+        final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(PROJECT_NAME)
+            .environmentName("PROD")
+            .permissions(new Permissions()
+                    .groupPermissions(DXC_ADMINISTRATORS, PermissionType.ADMIN, PermissionType.EDIT, PermissionType.VIEW, PermissionType.BUILD)
+                    .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.EDIT, PermissionType.VIEW, PermissionType.BUILD)
+                    .groupPermissions(PROJECT_TEAM, PermissionType.VIEW));
+        return environmentPermission;
+    }
+	
+
+    /**
+     * Run main to publish plan on Bamboo
+     */
+    public static void main(final String[] args) throws Exception {
+        //By default credentials are read from the '.credentials' file.
+        BambooServer bambooServer = new BambooServer(BAMBOO_URL);
+        final PlanSpec planSpec = new PlanSpec();
+        
+        // BUILD PLAN
+        final Plan buildPlan = planSpec.createBuildPlan();
+        bambooServer.publish(buildPlan);
+
+        PlanPermissions planPermission = planSpec.createBuildPlanPermission(buildPlan.getIdentifier());
+        bambooServer.publish(planPermission);
+
+
+        // DEPLOYMENT PLAN
+        final PlanSpec deployPlanSpec = new PlanSpec();
+        
+        final Deployment deployment = deployPlanSpec.createDeploymentProject();
+        bambooServer.publish(deployment);
+        
+        final DeploymentPermissions deploymentPermission = deployPlanSpec.deploymentPermission();
+        bambooServer.publish(deploymentPermission);
+        
+        final EnvironmentPermissions environmentPermissionUAT = deployPlanSpec.environmentPermissionUAT();
+        bambooServer.publish(environmentPermissionUAT);
+        
+        final EnvironmentPermissions environmentPermissionPROD = deployPlanSpec.environmentPermissionPROD();
+        bambooServer.publish(environmentPermissionPROD);
+
+    }
+    
+    //*** END OF NOT MODIFY AREA
+    
+    //*** AREA TO BE MODIFIED BY PROJECT TEAM (TASKS PER EACH ENVIRONMENT ***//
+    public final Deployment createDeploymentProject()
 	{
 		Deployment deployment = new Deployment(new PlanIdentifier(PROJECT_NAME, PROJECT_KEY), DEPLOYMENT_KEY);
 		
-		deployment.description("DEMO deployment plan");
-		deployment.releaseNaming(new ReleaseNaming("release-1").autoIncrement(true));
+		deployment.description(DEPLOYMENT_PLAN_DESC);
+		deployment.releaseNaming(new ReleaseNaming(RELEASE_NAME_FORMAT).autoIncrement(true));
 		
+		//*** MODIFY THS ***//
+		/* TODO: Modify tasks for UAT and PROD environments */
 		deployment.environments(
 			new Environment("UAT")
                 .description("UAT environment")
@@ -82,68 +187,9 @@ public class PlanSpec {
                         .inlineBody("echo \"download artifacts\"")
                         .workingSubdirectory("deployment_scripts")));
 		
+		//*** END OF MODIFY THIS
 		return deployment;
 	}
-	
-	public DeploymentPermissions deploymentPermission() {
-        final DeploymentPermissions deploymentPermission = new DeploymentPermissions(PROJECT_NAME)
-            .permissions(new Permissions()
-                    .userPermissions("PCASTANOIGLE", PermissionType.EDIT, PermissionType.VIEW)
-                    .loggedInUserPermissions(PermissionType.VIEW)
-                    .anonymousUserPermissionView());
-        return deploymentPermission;
-    }
     
-    public EnvironmentPermissions environmentPermissionUAT() {
-        final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(PROJECT_NAME)
-            .environmentName("UAT")
-            .permissions(new Permissions()
-                    .userPermissions("PCASTANOIGLE", PermissionType.EDIT, PermissionType.VIEW, PermissionType.BUILD)
-                    .loggedInUserPermissions(PermissionType.VIEW)
-                    .anonymousUserPermissionView());
-        return environmentPermission;
-    }
-    
-    public EnvironmentPermissions environmentPermissionPROD() {
-        final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(PROJECT_NAME)
-            .environmentName("PROD")
-            .permissions(new Permissions()
-                    .userPermissions("PCASTANOIGLE", PermissionType.EDIT, PermissionType.VIEW, PermissionType.BUILD)
-                    .loggedInUserPermissions(PermissionType.VIEW)
-                    .anonymousUserPermissionView());
-        return environmentPermission;
-    }
-	
-
-    /**
-     * Run main to publish plan on Bamboo
-     */
-    public static void main(final String[] args) throws Exception {
-        //By default credentials are read from the '.credentials' file.
-        BambooServer bambooServer = new BambooServer("http://localhost:8085");
-        final PlanSpec planSpec = new PlanSpec();
-        
-      /*  // BUILD PLAN
-        final Plan buildPlan = planSpec.createBuildPlan();
-        bambooServer.publish(buildPlan);
-
-        PlanPermissions planPermission = planSpec.createBuildPlanPermission(buildPlan.getIdentifier());
-        bambooServer.publish(planPermission);
-        */
-        // DEPLOYMENT PLAN
-        
-        final Deployment deployment = planSpec.createDeploymentProject();
-        bambooServer.publish(deployment);
-        
-        final DeploymentPermissions deploymentPermission = planSpec.deploymentPermission();
-        bambooServer.publish(deploymentPermission);
-        
-        final EnvironmentPermissions environmentPermissionUAT = planSpec.environmentPermissionUAT();
-        bambooServer.publish(environmentPermissionUAT);
-        
-        final EnvironmentPermissions environmentPermissionPROD = planSpec.environmentPermissionPROD();
-        bambooServer.publish(environmentPermissionPROD);
-
-    }
 
 }
