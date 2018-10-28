@@ -106,7 +106,7 @@ public class PlanSpec {
         final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(PROJECT_NAME)
             .environmentName("UAT")
             .permissions(new Permissions()
-                    .groupPermissions(DXC_ADMINISTRATORS, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD, PermissionType.ADMIN)
+                    .groupPermissions(DXC_ADMINISTRATORS, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
                     .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
                     .groupPermissions(PROJECT_TEAM, PermissionType.VIEW, PermissionType.BUILD));
         return environmentPermission;
@@ -116,7 +116,7 @@ public class PlanSpec {
         final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(PROJECT_NAME)
             .environmentName("PROD")
             .permissions(new Permissions()
-            		.groupPermissions(DXC_ADMINISTRATORS, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD, PermissionType.ADMIN)
+            		.groupPermissions(DXC_ADMINISTRATORS, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
                     .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
                     .groupPermissions(PROJECT_TEAM, PermissionType.VIEW));
         return environmentPermission;
