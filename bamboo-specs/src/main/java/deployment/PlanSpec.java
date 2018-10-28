@@ -95,7 +95,7 @@ public class PlanSpec {
 	public DeploymentPermissions deploymentPermission() {
         final DeploymentPermissions deploymentPermission = new DeploymentPermissions(PROJECT_NAME)
             .permissions(new Permissions()
-			        .groupPermissions(DXC_ADMINISTRATORS,PermissionType.VIEW, PermissionType.EDIT, PermissionType.ADMIN)
+			        .groupPermissions(DXC_ADMINISTRATORS,PermissionType.VIEW, PermissionType.EDIT)
 			        .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.VIEW, PermissionType.EDIT)
 			        .groupPermissions(PROJECT_TEAM, PermissionType.VIEW));
         
