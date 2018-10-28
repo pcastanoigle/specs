@@ -27,11 +27,13 @@ public class PlanSpec {
 	
 	// *** PLAN DETAILS *** //
 	// Name of the project
-	private final static String PROJECT_NAME = "PROJECTNAME";
+	private final static String BUILD_PROJECT_NAME = "BUILDPROJECTNAME";
 	// Project key
 	private final static String PROJECT_KEY = "PROJECTKEY";
 	// Deployment project key
 	private final static String DEPLOYMENT_KEY = "DEPLOYKEY";
+	// Name of the project
+	private final static String DEPLOYMENT_PROJECT_NAME = "PROJECTNAME";	
 	// Deployment project description
 	private final static String DEPLOYMENT_PLAN_DESC = "Description of the deployment plan";
 	// Release name format
@@ -76,7 +78,7 @@ public class PlanSpec {
 	/*** STANDARD METHODS - NOT MODIFY ***/	
 	public final Project createBuildProject() {
         return new Project()
-                .name(PROJECT_NAME)
+                .name(BUILD_PROJECT_NAME)
                 .key(PROJECT_KEY);
 	}
 	
@@ -102,7 +104,7 @@ public class PlanSpec {
     }
 	
 	public DeploymentPermissions deploymentPermission() {
-        final DeploymentPermissions deploymentPermission = new DeploymentPermissions(PROJECT_NAME)
+        final DeploymentPermissions deploymentPermission = new DeploymentPermissions(DEPLOYMENT_PROJECT_NAME)
             .permissions(new Permissions()
 			        .groupPermissions(DXC_ADMINISTRATORS,PermissionType.VIEW, PermissionType.EDIT)
 			        .groupPermissions(DXC_CONTINUOUS_DEPLOYMENT_TEAM, PermissionType.VIEW, PermissionType.EDIT)
@@ -112,7 +114,7 @@ public class PlanSpec {
     }
     
     public EnvironmentPermissions environmentPermissionUAT() {
-        final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(PROJECT_NAME)
+        final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(DEPLOYMENT_PROJECT_NAME)
             .environmentName(UAT_ENV)
             .permissions(new Permissions()
                     .groupPermissions(DXC_ADMINISTRATORS, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
@@ -122,7 +124,7 @@ public class PlanSpec {
     }
     
     public EnvironmentPermissions environmentPermissionPROD() {
-        final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(PROJECT_NAME)
+        final EnvironmentPermissions environmentPermission = new EnvironmentPermissions(DEPLOYMENT_PROJECT_NAME)
             .environmentName(PROD_ENV)
             .permissions(new Permissions()
             		.groupPermissions(DXC_ADMINISTRATORS, PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD)
