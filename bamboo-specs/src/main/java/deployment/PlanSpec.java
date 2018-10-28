@@ -1,6 +1,7 @@
 package deployment;
 
 import com.atlassian.bamboo.specs.api.BambooSpec;
+import com.atlassian.bamboo.specs.api.builders.BambooOid;
 import com.atlassian.bamboo.specs.api.builders.deployment.Deployment;
 import com.atlassian.bamboo.specs.api.builders.deployment.Environment;
 import com.atlassian.bamboo.specs.api.builders.deployment.ReleaseNaming;
@@ -60,6 +61,8 @@ public class PlanSpec {
 	private final static String DXC_CONTINUOUS_DEPLOYMENT_TEAM = "CEGSEC_DEVOPS_GE_CD_DEVELOPERS";
 	// Project team
 	private final static String PROJECT_TEAM = "CEGSEC_DEVOPS_GE_CD_USERS";
+	
+	private BambooOid buildPlanOID = null;
 	
 	
 	
@@ -134,13 +137,16 @@ public class PlanSpec {
         // BUILD PLAN
         final Plan buildPlan = planSpec.createBuildPlan();
         bambooServer.publish(buildPlan);
+        
+        
 
         PlanPermissions planPermission = planSpec.createBuildPlanPermission(buildPlan.getIdentifier());
         bambooServer.publish(planPermission);
-
-
+                
         // DEPLOYMENT PLAN
         final PlanSpec deployPlanSpec = new PlanSpec();
+        
+        deployPlanSpec.buildPlanOID = buildPlan.getOid();
         
         final Deployment deployment = deployPlanSpec.createDeploymentProject();
         bambooServer.publish(deployment);
@@ -161,7 +167,7 @@ public class PlanSpec {
     //*** AREA TO BE MODIFIED BY PROJECT TEAM (TASKS PER EACH ENVIRONMENT ***//
     public final Deployment createDeploymentProject()
 	{
-		Deployment deployment = new Deployment(new PlanIdentifier(PROJECT_NAME, PROJECT_KEY), DEPLOYMENT_KEY);
+		Deployment deployment = new Deployment(new PlanIdentifier(PROJECT_NAME, PROJECT_KEY).oid(this.buildPlanOID), DEPLOYMENT_KEY);
 		
 		deployment.description(DEPLOYMENT_PLAN_DESC);
 		deployment.releaseNaming(new ReleaseNaming(RELEASE_NAME_FORMAT).autoIncrement(true));
