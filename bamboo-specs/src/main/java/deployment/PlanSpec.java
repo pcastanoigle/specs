@@ -1,6 +1,7 @@
 package deployment;
 
 import com.atlassian.bamboo.specs.api.BambooSpec;
+import com.atlassian.bamboo.specs.api.builders.credentials.SharedCredentialsIdentifier;
 import com.atlassian.bamboo.specs.api.builders.deployment.Deployment;
 import com.atlassian.bamboo.specs.api.builders.deployment.Environment;
 import com.atlassian.bamboo.specs.api.builders.deployment.ReleaseNaming;
@@ -88,7 +89,8 @@ public class PlanSpec {
 		plan.planRepositories(new GitRepository()
                 .name(REPO_NAME)
                 .url(REPO_URL)
-                .branch(REPO_BRANCH));
+                .branch(REPO_BRANCH)
+                .authentication(new SharedCredentialsIdentifier("VERIFIED_REPO")));
 		
 		return plan;
 	}
