@@ -13,6 +13,7 @@ import com.atlassian.bamboo.specs.api.builders.permission.PlanPermissions;
 import com.atlassian.bamboo.specs.api.builders.plan.Plan;
 import com.atlassian.bamboo.specs.api.builders.plan.PlanIdentifier;
 import com.atlassian.bamboo.specs.api.builders.project.Project;
+import com.atlassian.bamboo.specs.api.builders.repository.VcsChangeDetection;
 import com.atlassian.bamboo.specs.builders.repository.git.GitRepository;
 import com.atlassian.bamboo.specs.builders.task.CleanWorkingDirectoryTask;
 import com.atlassian.bamboo.specs.builders.task.ScriptTask;
@@ -57,9 +58,14 @@ public class PlanSpec {
 	// Repo name
 	private final static String REPO_NAME = "Verified repo";
 	// Repo URL
-	private final static String REPO_URL = "ssh://git@http://ceala03374.emea.zurich.corp:7990:DEMO/deployment_scripts.git";
+	//private final static String REPO_URL = "ssh://git@http://ceala03374.emea.zurich.corp:7990:DEMO/deployment_scripts.git";
+	private final static String REPO_URL = "https://github.com/pcastanoigle/specs";
 	// Repo branch
-	private final static String REPO_BRANCH = "verified";
+	//private final static String REPO_BRANCH = "verified";
+	private final static String REPO_BRANCH = "master";
+	
+	
+	
 	
 	// *** GROUPS AND USERS FOR PRIVILEGES *** //
 	// DXC platform administrators
@@ -90,7 +96,8 @@ public class PlanSpec {
                 .name(REPO_NAME)
                 .url(REPO_URL)
                 .branch(REPO_BRANCH)
-                .authentication(new SharedCredentialsIdentifier("VERIFIED_REPO")));
+                .authentication(new SharedCredentialsIdentifier("VERIFIED_REPO"))
+                .changeDetection(new VcsChangeDetection()));
 		
 		return plan;
 	}
